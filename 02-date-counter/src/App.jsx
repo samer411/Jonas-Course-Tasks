@@ -65,7 +65,7 @@ function Counter() {
 
       <div className="date">
         <p>
-          This is {count} days to{" "}
+         {count==0?"Todady is":count>0?`${count} from`:`${Math.abs(count)} to`}{" "}
           {date.toLocaleDateString("en-us", options).replace(/,/g, "")}
         </p>
       </div>
