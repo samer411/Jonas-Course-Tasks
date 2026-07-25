@@ -5,9 +5,9 @@ export default function App() {
 }
 
 function Counter() {
-  const [steps, setSteps] = useState(1);
-  const [count, setCount] = useState(0);
-  const[date,setDate] =useState(new Date());
+  const [steps, setSteps] = useState(0);
+  const [count, setCount] = useState(1);
+  const [date, setDate] = useState(new Date());
   const options = {
     weekday: "short",
     year: "numeric",
@@ -17,46 +17,51 @@ function Counter() {
 
   return (
     <>
-      <div className="stpes flex justify-center items-center m-5">
-        <button
-          className="bg-amber-200 rounded-xl p-3 cursor-pointer"
-          onClick={() => setSteps((s) => s - 1)}
-        >
-          -
-        </button>
-        <p className="m-3">Steps:{steps}</p>
-        <button
-          className="bg-amber-200 rounded-xl p-3 cursor-pointer"
-          onClick={() => setSteps((s) => s + 1)}
-        >
-          +
-        </button>
+      <div className="count flex justify-center">
+        <input
+          type="range"
+          value={count}
+          onChange={(e) =>{
+             setCount((c) => (c = Number(e.target.value)))
+          }}
+          min={0}
+          max={10}
+          name="steps"
+          id="steps"
+        />
+        <p className="m-2">{count}</p>
       </div>
 
       <div className="counter flex justify-center items-center m-5">
         <button
           className="bg-amber-200 rounded-xl p-3 cursor-pointer"
           onClick={() => {
-            setCount((c) => c - steps);
-            setDate((currentDate) =>{  
+            setDate((currentDate) => {
               const nextDate = new Date(currentDate);
-              nextDate.setDate(nextDate.getDate()-steps)
+              nextDate.setDate(nextDate.getDate() - steps * count);
               return nextDate;
-              });
+            });
           }}
         >
           -
         </button>
-        <p className="m-3">Counter:{count}</p>
+        <input
+          type="text"
+          name="counter"
+          id="counter"
+          onChange={(e) => setSteps((s) => (s = Number(e.target.value)))}
+          value={steps}
+          className="border-2 rounded-2xl p-2 m-2"
+        />
         <button
           className="bg-amber-200 rounded-xl p-3 cursor-pointer"
           onClick={() => {
-            setCount((c) => c + steps);
-           setDate((currentDate) =>{  
+            console.log("click");
+            setDate((currentDate) => {
               const nextDate = new Date(currentDate);
-              nextDate.setDate(nextDate.getDate()+steps)
+              nextDate.setDate(nextDate.getDate() + steps * count);
               return nextDate;
-              });
+            });
           }}
         >
           +
@@ -65,10 +70,23 @@ function Counter() {
 
       <div className="date">
         <p>
-         {count==0?"Todady is":count>0?`${count} from`:`${Math.abs(count)} to`}{" "}
+          {steps == 0
+            ? "Todady is"
+            : steps > 0
+              ? `${steps} from`
+              : `${Math.abs(steps)} to`}{" "}
           {date.toLocaleDateString("en-us", options).replace(/,/g, "")}
         </p>
       </div>
+      {
+        (count>1)&&(<div className="reset">
+            <button className="m-3 px-5 py-2 bg-gray-300 rounded-2xl cursor-pointer" onClick={()=>{
+              setCount((c)=>c=1)
+              setSteps((s)=>s=0)
+              setDate((d)=>d=new Date())
+            }}>reset</button>
+      </div>)
+      }
     </>
   );
 }
